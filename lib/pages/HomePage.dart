@@ -1,22 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
+
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
 
 class _HomePageState extends State<HomePage> {
-  var apiKey = "eb66d86c1805bbcfdab91296b08f9008";
+
   var city = "Lusaka";
   late Map<String, dynamic>? weatherData;
 
   @override
   void initState() {
     super.initState();
+
     weatherData = {};
     fetchData();
   }
@@ -26,8 +29,9 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> fetchData() async {
+    final api = dotenv.env['API_KEY'];
     final response = await http.get(
-      Uri.parse('https://api.openweathermap.org/data/2.5/weather?q=$city&appid=$apiKey'),
+      Uri.parse('https://api.openweathermap.org/data/2.5/weather?q=$city&appid=$api'),
     );
 
     if (response.statusCode == 200) {
