@@ -8,21 +8,28 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-
 class _HomePageState extends State<HomePage> {
-  var apiKey = dotenv.env['API_KEY'];
-  var city = "Lusaka";
+  final apiKey = dotenv.env['API_KEY'];
+  late String city;
   late Map<String, dynamic>? weatherData;
 
   @override
   void initState() {
     super.initState();
     weatherData = {};
+    city = "Lusaka";
     fetchData();
   }
 
   double kelvinToCelsius(double kelvin) {
     return kelvin - 273.15;
+  }
+
+  void updateCity(String newCity) {
+    setState(() {
+      city = newCity;
+    });
+    fetchData();
   }
 
   Future<void> fetchData() async {
@@ -46,9 +53,7 @@ class _HomePageState extends State<HomePage> {
         title: const Text('Weather App'),
       ),
       body: Center(
-        child: weatherData == null
-            ? const CircularProgressIndicator()
-            : Column(
+        child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
@@ -64,6 +69,14 @@ class _HomePageState extends State<HomePage> {
             Text(
               'Description: ${weatherData!['weather']?[0]['description'] ?? 'N/A'}',
               style: const TextStyle(fontSize: 18),
+            ),
+            const SizedBox(height: 20),
+            TextField(
+              onChanged: (newCity) => updateCity(newCity),
+              decoration: const InputDecoration(
+                labelText: 'Enter City Name',
+                hintText: 'e.g., London',
+              ),
             ),
           ],
         ),
