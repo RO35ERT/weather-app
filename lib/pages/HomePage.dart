@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:my_app/utils/Forecast.dart';
+import 'package:my_app/utils/MainCard.dart';
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
   @override
@@ -62,19 +64,18 @@ class _HomePageState extends State<HomePage> {
       ),
       body: const Column(
         children: [
+          MainCard(),
+          SizedBox(
+            height: 30,
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16.0),
+            child: Forecast(),
+          ),
+          SizedBox(
+            height: 30,
+          ),
 
-          SizedBox(
-            height: 30,
-          ),
-          Placeholder(
-            fallbackHeight: 150,
-          ),
-          SizedBox(
-            height: 30,
-          ),
-          Placeholder(
-            fallbackHeight: 100,
-          ),
         ],
       ),
 
