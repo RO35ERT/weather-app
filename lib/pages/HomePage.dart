@@ -53,12 +53,31 @@ class _HomePageState extends State<HomePage> {
         title: const Text('Weather App'),
         centerTitle: true,
         elevation: 0,
+        actions: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: IconButton(onPressed: (){}, icon: const Icon(Icons.refresh)),
+          )
+        ],
       ),
-      body: const Center(
-        child: Column(
+      body: const Column(
+        children: [
 
-        ),
+          SizedBox(
+            height: 30,
+          ),
+          Placeholder(
+            fallbackHeight: 150,
+          ),
+          SizedBox(
+            height: 30,
+          ),
+          Placeholder(
+            fallbackHeight: 100,
+          ),
+        ],
       ),
+
     );
   }
 }

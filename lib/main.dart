@@ -6,9 +6,12 @@ import 'package:my_app/pages/HomePage.dart';
 Future<void> main () async{
   await dotenv.load(fileName: ".env");
   runApp(
-    const MaterialApp(
+    MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: HomePage(),
+      theme: ThemeData.dark(useMaterial3: true).copyWith(
+        appBarTheme: const AppBarTheme()
+      ),
+      home: const HomePage(),
     )
   );
 }
