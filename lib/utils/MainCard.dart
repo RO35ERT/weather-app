@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
 
 
-class MainCard extends StatefulWidget {
-  const MainCard({super.key});
+class MainCard extends StatelessWidget {
+  final String? temperature;
+  final String? weather;
+  final IconData icon;
+  const MainCard({super.key, required this.weather, this.temperature, required this.icon});
 
-  @override
-  State<MainCard> createState() => _MainCardState();
-}
 
-class _MainCardState extends State<MainCard> {
   @override
   Widget build(BuildContext context) {
-    return const Padding(
-      padding: EdgeInsets.symmetric(horizontal: 16.0),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
       child: SizedBox(
         width: double.infinity,
         child: Card(
@@ -20,21 +19,21 @@ class _MainCardState extends State<MainCard> {
           child: Column(
             children: [
               Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Text("300°F",
-                  style: TextStyle(
+                padding: const EdgeInsets.all(8.0),
+                child: Text("${temperature != null?temperature.toString():0}°C",
+                  style: const TextStyle(
                       fontSize: 32,
                       fontWeight: FontWeight.bold
                   ),
                 ),
               ),
               Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Icon(Icons.cloud,size: 80,),
+                padding: const EdgeInsets.all(8.0),
+                child: Icon(icon,size: 80,),
               ),
               Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Text("Rain",
+                padding: const EdgeInsets.all(8.0),
+                child: Text(weather!,
                 ),
               ),
             ],

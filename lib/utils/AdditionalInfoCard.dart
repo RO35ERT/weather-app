@@ -1,28 +1,26 @@
 import 'package:flutter/material.dart';
 
-class AdditionalInfoCard extends StatefulWidget {
-  const AdditionalInfoCard({super.key});
+class AdditionalInfoCard extends StatelessWidget {
+  final IconData icon;
+  final String? name;
+  final double? value;
+  const AdditionalInfoCard({super.key, required this.icon, this.name, this.value});
 
-  @override
-  State<AdditionalInfoCard> createState() => _AdditionalInfoCardState();
-}
-
-class _AdditionalInfoCardState extends State<AdditionalInfoCard> {
   @override
   Widget build(BuildContext context) {
-    return const SizedBox(
-      width: 150,
+    return SizedBox(
+      width: 130,
       child: Card(
         child: Column(
           children: [
             Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Icon(Icons.water_drop),
+              padding: const EdgeInsets.all(8.0),
+              child: Icon(icon),
             ),
-            Text("Humidity"),
+            Text(name!),
             Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Text("95"),
+              padding: const EdgeInsets.all(8.0),
+              child: Text(value.toString()),
             )
           ],
         ),

@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:my_app/constants/secret.dart';
+import 'package:my_app/utils/AdditionalInfo.dart';
 import 'package:my_app/utils/Forecast.dart';
+import 'package:my_app/utils/ForecastCard.dart';
 import 'package:my_app/utils/MainCard.dart';
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -27,25 +30,16 @@ class _HomePageState extends State<HomePage> {
     return kelvin - 273.15;
   }
 
-  void updateCity(String newCity) {
-    setState(() {
-      city = newCity;
-    });
-    fetchData();
-  }
 
-  Future<void> fetchData() async {
+  Future<Map<String, dynamic>> fetchData() async {
     final response = await http.get(
-      Uri.parse('https://api.openweathermap.org/data/2.5/forecast?q=Lusaka&appid=eb66d86c1805bbcfdab91296b08f9008'),
+      Uri.parse('https://api.openweathermap.org/data/2.5/forecast?q=Lusaka&appid=$API_KEY'),
     );
 
     if (response.statusCode == 200) {
-      final Map<String, dynamic> data = json.decode(response.body);
-        setState(() {
-          weatherData = data;
-        });
+      return json.decode(response.body);
     } else {
-      throw Exception('Failed to load weather data');
+      throw Exception('Failed to load data');
     }
   }
   @override
@@ -62,22 +56,64 @@ class _HomePageState extends State<HomePage> {
           )
         ],
       ),
-      body: const Column(
-        children: [
-          MainCard(),
-          SizedBox(
-            height: 30,
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.0),
-            child: Forecast(),
-          ),
-          SizedBox(
-            height: 30,
-          ),
+      body: FutureBuilder(
+        future: fetchData(),
+        builder: (context, snapshot) {
+          if(snapshot.connectionState ==ConnectionState.waiting){
+            return const Center(child: CircularProgressIndicator.adaptive());
+          }
+          if(snapshot.hasError){
+            return const Center(child: Text("Failed to fetch data"),);
+          }
 
-        ],
-      ),
+          var data = snapshot.data?['list'];
+          var temp = data[0]['main']['temp'];
+          var weather = data[0]['weather'][0]['main'];
+          return SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                MainCard(
+                  weather: weather,
+                  temperature: kelvinToCelsius(temp).toStringAsFixed(2),
+                  icon: weather =="Rain"|| weather =="Clouds" ? Icons.cloud : Icons.sunny,
+                ),
+                const SizedBox(
+                  height: 30,
+                ),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Text("Hourly Forecast", style: TextStyle(
+                      fontSize: 24, fontWeight: FontWeight.bold),),
+                ),
+                const SizedBox(
+                  height: 30,
+                ),
+                Forecast(data: data),
+                const SizedBox(
+                  height: 30,
+                ),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Text("Additional Information", style: TextStyle(
+                      fontSize: 24, fontWeight: FontWeight.bold),),
+                ),
+                Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: AdditionalInfo(
+                      humidity:double.parse(data[0]['main']['humidity'].toString()),
+                      pressure: double.parse(data[0]['main']['pressure'].toString()),
+                      windSpeed: double.parse(data[0]['wind']['speed'].toString()),
+                    ),
+                  ),
+                )
+              ],
+            ),
+          );
+        },
+
+      )
 
     );
   }
