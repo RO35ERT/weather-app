@@ -7,6 +7,7 @@ Future<void> main () async{
   await dotenv.load(fileName: ".env");
   runApp(
     const MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: HomePage(),
     )
   );

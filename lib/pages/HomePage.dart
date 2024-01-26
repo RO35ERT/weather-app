@@ -10,7 +10,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final apiKey = dotenv.env['API_KEY'];
-  late String city;
+  late String city = "Lusaka";
   late Map<String, dynamic>? weatherData;
 
   @override
@@ -34,7 +34,7 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> fetchData() async {
     final response = await http.get(
-      Uri.parse('https://api.openweathermap.org/data/2.5/weather?q=$city&appid=$apiKey'),
+      Uri.parse('https://api.openweathermap.org/data/2.5/forecast?q=Lusaka&appid=eb66d86c1805bbcfdab91296b08f9008'),
     );
 
     if (response.statusCode == 200) {
@@ -51,34 +51,12 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Weather App'),
+        centerTitle: true,
+        elevation: 0,
       ),
-      body: Center(
+      body: const Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'Current Weather in $city',
-              style: const TextStyle(fontSize: 24),
-            ),
-            const SizedBox(height: 20),
-            Text(
-              'Temperature: ${kelvinToCelsius(weatherData!['main']['temp']).toStringAsFixed(2)}°C',
-              style: const TextStyle(fontSize: 18),
-            ),
-            const SizedBox(height: 10),
-            Text(
-              'Description: ${weatherData!['weather']?[0]['description'] ?? 'N/A'}',
-              style: const TextStyle(fontSize: 18),
-            ),
-            const SizedBox(height: 20),
-            TextField(
-              onChanged: (newCity) => updateCity(newCity),
-              decoration: const InputDecoration(
-                labelText: 'Enter City Name',
-                hintText: 'e.g., London',
-              ),
-            ),
-          ],
+
         ),
       ),
     );
